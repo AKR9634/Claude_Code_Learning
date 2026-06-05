@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — Spendly{% endblock %}
+
+{% block content %}
+<div class="terms-container">
+    <article class="terms-content">
+        <h1>Privacy Policy</h1>
+        <p class="terms-last-updated">Last Updated: June 5, 2026</p>
+
+        <section>
+            <h2>1. Data We Collect</h2>
+            <p>We collect only the information necessary to provide our service. This includes:</p>
+            <ul>
+                <li><strong>Account Information:</strong> Your email address and password for account authentication.</li>
+                <li><strong>Financial Data:</strong> Expense amounts, categories, descriptions, and dates that you manually input into the application.</li>
+                <li><strong>Usage Data:</strong> Basic interaction data to help us improve the application's functionality.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>2. How We Use Your Data</h2>
+            <p>Your data is used exclusively for the following purposes:</p>
+            <ul>
+                <li>To provide and maintain the expense tracking functionality.</li>
+                <li>To generate spending reports and financial insights for your account.</li>
+                <li>To secure your account and prevent unauthorized access.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Data Storage</h2>
+            <p>Your data is stored using secure encryption protocols. We implement industry-standard security measures to protect your information from unauthorized access, alteration, or destruction. Data is stored on secure servers with regular backups to ensure availability.</p>
+        </section>
+
+        <section>
+            <h2>4. Third Party Services</h2>
+            <p>Spendly does not sell, trade, or otherwise transfer your personal or financial data to third parties. We do not use third-party tracking cookies or advertising pixels. Any third-party libraries used for the application's operation are strictly limited to functional requirements.</p>
+        </section>
+
+        <section>
+            <h2>5. Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy or how your data is handled, please contact us through the application support channel.</p>
+        </section>
+
+        <div class="terms-footer">
+            <p>Your privacy is our priority.</p>
+            <a href="{{ url_for('landing') }}" class="btn-ghost">Back to Home</a>
+        </div>
+    </article>
+</div>
+
+<style>
+    .terms-container {
+        max-width: 800px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+    }
+    .terms-content {
+        background: white;
+        padding: 3rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        line-height: 1.6;
+        color: #4a4a4a;
+    }
+    .terms-content h1 {
+        font-family: 'DM Serif Display', serif;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #1a1a1a;
+    }
+    .terms-last-updated {
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 2rem;
+    }
+    .terms-content section {
+        margin-bottom: 2rem;
+    }
+    .terms-content h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    .terms-content ul {
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .terms-content li {
+        margin-bottom: 0.5rem;
+    }
+    .terms-footer {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+{% endblock %}

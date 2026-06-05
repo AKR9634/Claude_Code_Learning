@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Terms and Conditions — Spendly{% endblock %}
+
+{% block content %}
+<div class="terms-container">
+    <article class="terms-content">
+        <h1>Terms and Conditions</h1>
+        <p class="terms-last-updated">Last Updated: June 5, 2026</p>
+
+        <section>
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing and using Spendly, you agree to be bound by these Terms and Conditions and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.</p>
+        </section>
+
+        <section>
+            <h2>2. Use of Service</h2>
+            <p>Spendly provides a personal expense tracking tool. You agree to use the service only for lawful purposes and in a manner that does not infringe the rights of others. You are responsible for maintaining the confidentiality of your account and password.</p>
+        </section>
+
+        <section>
+            <h2>3. User Data</h2>
+            <p>Your financial data is stored securely. You retain ownership of the data you input. Spendly uses this data solely to provide the tracking and analysis services described in the app. We do not sell your personal financial data to third parties.</p>
+        </section>
+
+        <section>
+            <h2>4. Limitations of Liability</h2>
+            <p>Spendly is provided "as is" without warranties of any kind. In no event shall Spendly be liable for any loss of data, financial loss, or any indirect, incidental, or consequential damages arising out of the use of the service.</p>
+        </section>
+
+        <section>
+            <h2>5. Changes to Terms</h2>
+            <p>We reserve the right to modify these terms at any time. We will notify users of any significant changes by posting a notice within the app. Your continued use of the service after such changes constitutes acceptance of the new terms.</p>
+        </section>
+
+        <div class="terms-footer">
+            <p>If you have any questions about these Terms, please contact us.</p>
+            <a href="{{ url_for('landing') }}" class="btn-ghost">Back to Home</a>
+        </div>
+    </article>
+</div>
+
+<style>
+    .terms-container {
+        max-width: 800px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+    }
+    .terms-content {
+        background: white;
+        padding: 3rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        line-height: 1.6;
+        color: #4a4a4a;
+    }
+    .terms-content h1 {
+        font-family: 'DM Serif Display', serif;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #1a1a1a;
+    }
+    .terms-last-updated {
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 2rem;
+    }
+    .terms-content section {
+        margin-bottom: 2rem;
+    }
+    .terms-content h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    .terms-footer {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+{% endblock %}
