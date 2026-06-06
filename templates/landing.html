@@ -19,6 +19,7 @@
         <div class="hero-actions">
             <a href="{{ url_for('register') }}" class="btn-primary">Start tracking free</a>
             <a href="{{ url_for('login') }}" class="btn-ghost">Sign in</a>
+            <button type="button" class="btn-ghost" id="openVideoModal">See how it works</button>
         </div>
     </div>
     <div class="hero-visual">
@@ -88,5 +89,139 @@
         <a href="{{ url_for('register') }}" class="btn-primary">Create free account</a>
     </div>
 </section>
+
+<!-- Video Modal -->
+<div class="video-modal-overlay" id="videoModal" hidden>
+    <div class="video-modal" role="dialog" aria-modal="true" aria-label="How Spendly works">
+        <button type="button" class="video-modal-close" id="closeVideoModal" aria-label="Close video">&times;</button>
+        <div class="video-modal-frame">
+            <iframe
+                id="videoIframe"
+                src=""
+                title="How Spendly works"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+            ></iframe>
+        </div>
+    </div>
+</div>
+
+<style>
+    .video-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 1.5rem;
+        animation: fadeIn 0.2s ease-out;
+    }
+
+    .video-modal-overlay[hidden] {
+        display: none;
+    }
+
+    .video-modal {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        background: #000;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        animation: scaleIn 0.2s ease-out;
+    }
+
+    .video-modal-close {
+        position: absolute;
+        top: -2.75rem;
+        right: 0;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 2.25rem;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        transition: opacity 0.15s ease;
+    }
+
+    .video-modal-close:hover {
+        opacity: 0.7;
+    }
+
+    .video-modal-frame {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 */
+        height: 0;
+    }
+
+    .video-modal-frame iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to   { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+        .video-modal-close {
+            top: -2.25rem;
+            font-size: 1.75rem;
+        }
+    }
+</style>
+
+<script>
+    (function () {
+        const PLACEHOLDER_VIDEO_URL = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
+
+        const overlay = document.getElementById('videoModal');
+        const openBtn = document.getElementById('openVideoModal');
+        const closeBtn = document.getElementById('closeVideoModal');
+        const iframe = document.getElementById('videoIframe');
+
+        function openModal() {
+            iframe.src = PLACEHOLDER_VIDEO_URL;
+            overlay.hidden = false;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            overlay.hidden = true;
+            iframe.src = ''; // stop the video
+            document.body.style.overflow = '';
+        }
+
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !overlay.hidden) {
+                closeModal();
+            }
+        });
+    })();
+</script>
 
 {% endblock %}
