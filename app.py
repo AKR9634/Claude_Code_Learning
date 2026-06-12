@@ -70,8 +70,34 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+
+        # --- Validation ---
+        if not email or not password:
+            return render_template("login.html", error="Please enter your email and password."), 400
+
+        # --- Credential lookup ---
+        conn = get_db()
+        try:
+            row = conn.execute(
+                "SELECT id, name, password_hash FROM users WHERE email = ?", (email,)
+            ).fetchone()
+        finally:
+            conn.close()
+
+        if row is None or not check_password_hash(row["password_hash"], password):
+            return render_template("login.html", error="Invalid email or password."), 401
+
+        # --- Log the user in ---
+        session["user_id"] = row["id"]
+        session["user_name"] = row["name"]
+        return redirect(url_for("profile"))
+
+    # GET — render the empty form
     return render_template("login.html")
 
 
@@ -89,9 +115,10 @@ def privacy():
 # Placeholder routes — students will implement these                  #
 # ------------------------------------------------------------------ #
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
 def logout():
-    return "Logout — coming in Step 3"
+    session.clear()
+    return redirect(url_for("landing"))
 
 
 @app.route("/profile")

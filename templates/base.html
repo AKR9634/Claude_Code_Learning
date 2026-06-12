@@ -8,7 +8,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {% block head %}{% endblock %}
+    {% block head %}
+    <style>
+        .nav-greeting {
+            color: var(--ink-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .nav-signout-form { display: inline; margin: 0; padding: 0; }
+        .nav-signout {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            font: inherit;
+            color: var(--ink-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-signout:hover { color: var(--ink); }
+    </style>
+    {% endblock %}
 </head>
 <body>
 
@@ -19,8 +40,15 @@
                 <span class="brand-name">Spendly</span>
             </a>
             <div class="nav-links">
-                <a href="{{ url_for('login') }}">Sign in</a>
-                <a href="{{ url_for('register') }}" class="nav-cta">Get started</a>
+                {% if session.user_id %}
+                    <span class="nav-greeting">Hi, {{ session.user_name }}</span>
+                    <form method="POST" action="{{ url_for('logout') }}" class="nav-signout-form">
+                        <button type="submit" class="nav-signout">Sign out</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Sign in</a>
+                    <a href="{{ url_for('register') }}" class="nav-cta">Get started</a>
+                {% endif %}
             </div>
         </div>
     </nav>
