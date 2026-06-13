@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Your profile — Spendly{% endblock %}
+
+{% block content %}
+
+<section class="auth-section">
+    <div class="auth-container profile-container">
+
+        <div class="auth-header">
+            <h1 class="auth-title">Welcome, {{ user.name }}</h1>
+            <p class="auth-subtitle">Your Spendly account at a glance</p>
+        </div>
+
+        <div class="auth-card profile-card">
+            <dl class="profile-fields">
+                <div class="profile-field">
+                    <dt class="profile-label">Name</dt>
+                    <dd class="profile-value">{{ user.name }}</dd>
+                </div>
+                <div class="profile-field">
+                    <dt class="profile-label">Email address</dt>
+                    <dd class="profile-value">{{ user.email }}</dd>
+                </div>
+                <div class="profile-field">
+                    <dt class="profile-label">Member since</dt>
+                    <dd class="profile-value">{{ user.created_at.split(' ')[0] }}</dd>
+                </div>
+            </dl>
+        </div>
+
+        <div class="profile-next">
+            <div class="profile-next-icon" aria-hidden="true">◈</div>
+            <h2 class="profile-next-title">Your expense history</h2>
+            <p class="profile-next-body">
+                Once you start logging expenses, your recent transactions,
+                monthly totals, and category breakdown will appear here.
+            </p>
+            <a href="{{ url_for('add_expense') }}" class="btn-primary profile-next-cta">
+                Add your first expense
+            </a>
+            <span class="profile-next-hint">Coming in Step 7</span>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<style>
+    .profile-container { max-width: var(--max-width); }
+
+    .profile-card { padding: 2rem 2.25rem; }
+
+    .profile-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin: 0;
+    }
+
+    .profile-field {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 1rem;
+        align-items: baseline;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--border-soft);
+    }
+
+    .profile-field:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .profile-label {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--ink-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    .profile-value {
+        font-size: 1rem;
+        color: var(--ink);
+        font-weight: 500;
+        margin: 0;
+        word-break: break-word;
+    }
+
+    .profile-next {
+        margin-top: 2rem;
+        background: var(--paper-card);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-md);
+        padding: 2.5rem 2rem;
+        text-align: center;
+    }
+
+    .profile-next-icon {
+        font-size: 1.75rem;
+        color: var(--accent);
+        margin-bottom: 0.75rem;
+    }
+
+    .profile-next-title {
+        font-family: var(--font-display);
+        font-size: 1.4rem;
+        color: var(--ink);
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-next-body {
+        font-size: 0.95rem;
+        color: var(--ink-muted);
+        line-height: 1.6;
+        max-width: 440px;
+        margin: 0 auto 1.5rem;
+    }
+
+    .profile-next-cta { margin-bottom: 0.75rem; }
+
+    .profile-next-hint {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--ink-faint);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 600px) {
+        .profile-field {
+            grid-template-columns: 1fr;
+            gap: 0.35rem;
+        }
+    }
+</style>
+{% endblock %}
