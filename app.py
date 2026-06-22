@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -5,6 +7,27 @@ from database.db import get_db, init_db, seed_db
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-change-me"  # TODO: move to env var before deploying
+
+
+# ------------------------------------------------------------------ #
+# Helpers                                                             #
+# ------------------------------------------------------------------ #
+
+def _parse_iso_date(value, default):
+    """Try to parse `value` as YYYY-MM-DD.
+
+    Returns (date, used_default_bool):
+      - on success: (parsed_date, False)
+      - on missing/empty/invalid input: (default, True)
+
+    Never raises — invalid dates fall back silently to the default.
+    """
+    if not value:
+        return default, True
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").date(), False
+    except ValueError:
+        return default, True
 
 
 # ------------------------------------------------------------------ #
@@ -126,16 +149,56 @@ def profile():
     if "user_id" not in session:
         return redirect(url_for("login"))
 
+    # --- Parse optional start_date / end_date query params ---
+    today = date.today()
+    default_start = today.replace(day=1)
+    default_end = today
+
+    start_date, start_defaulted = _parse_iso_date(
+        request.args.get("start_date"), default_start
+    )
+    end_date, end_defaulted = _parse_iso_date(
+        request.args.get("end_date"), default_end
+    )
+
+    # "This month" only when BOTH were defaulted.
+    is_default_range = start_defaulted and end_defaulted
+
+    # Silently swap if the user inverted the range.
+    if start_date > end_date:
+        start_date, end_date = end_date, start_date
+
+    start_iso = start_date.isoformat()
+    end_iso = end_date.isoformat()
+
+    # --- Single connection: load user + filtered expenses ---
     conn = get_db()
     try:
-        row = conn.execute(
+        user = conn.execute(
             "SELECT name, email, created_at FROM users WHERE id = ?",
             (session["user_id"],),
         ).fetchone()
+
+        expenses = conn.execute(
+            """
+            SELECT date, category, amount, description
+            FROM expenses
+            WHERE user_id = ? AND date BETWEEN ? AND ?
+            ORDER BY date DESC, id DESC
+            """,
+            (session["user_id"], start_iso, end_iso),
+        ).fetchall()
     finally:
         conn.close()
 
-    return render_template("profile.html", user=row)
+    return render_template(
+        "profile.html",
+        user=user,
+        start_date=start_iso,
+        end_date=end_iso,
+        expenses=expenses,
+        is_default_range=is_default_range,
+    )
 
 
 @app.route("/expenses/add")
