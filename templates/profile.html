@@ -32,10 +32,55 @@
         <div class="profile-next">
             <div class="profile-next-icon" aria-hidden="true">◈</div>
             <h2 class="profile-next-title">Your expense history</h2>
-            <p class="profile-next-body">
-                Once you start logging expenses, your recent transactions,
-                monthly totals, and category breakdown will appear here.
+
+            <form method="GET" action="{{ url_for('profile') }}" class="profile-filter-form" role="search">
+                <div class="profile-filter-fields">
+                    <div class="form-group profile-filter-field">
+                        <label for="start_date">From</label>
+                        <input
+                            type="date"
+                            id="start_date"
+                            name="start_date"
+                            value="{{ start_date }}"
+                            class="form-input"
+                        >
+                    </div>
+                    <div class="form-group profile-filter-field">
+                        <label for="end_date">To</label>
+                        <input
+                            type="date"
+                            id="end_date"
+                            name="end_date"
+                            value="{{ end_date }}"
+                            class="form-input"
+                        >
+                    </div>
+                    <button type="submit" class="btn-submit profile-filter-submit">Apply</button>
+                </div>
+            </form>
+
+            <p class="profile-range-label">
+                Showing expenses from {{ start_date }} to {{ end_date }}{% if is_default_range %} (this month){% endif %}
             </p>
+
+            {% if expenses %}
+                <ul class="profile-expenses">
+                    {% for expense in expenses %}
+                        <li class="profile-expense-row">
+                            <span class="profile-expense-date">{{ expense.date }}</span>
+                            <span class="profile-expense-category">{{ expense.category }}</span>
+                            <span class="profile-expense-amount">₹{{ '%.2f' | format(expense.amount) }}</span>
+                            <span class="profile-expense-description">{{ expense.description or '' }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="profile-next-body">
+                    Once you start logging expenses, your recent transactions,
+                    monthly totals, and category breakdown will appear here.
+                </p>
+            {% endif %}
+
             <a href="{{ url_for('add_expense') }}" class="btn-primary profile-next-cta">
                 Add your first expense
             </a>
@@ -96,7 +141,7 @@
         border: 1px dashed var(--border);
         border-radius: var(--radius-md);
         padding: 2.5rem 2rem;
-        text-align: center;
+        text-align: left;
     }
 
     .profile-next-icon {
@@ -109,7 +154,7 @@
         font-family: var(--font-display);
         font-size: 1.4rem;
         color: var(--ink);
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
     }
 
     .profile-next-body {
@@ -131,11 +176,96 @@
         text-transform: uppercase;
     }
 
+    /* --- Date filter form --- */
+    .profile-filter-form {
+        margin: 1.5rem auto 1rem;
+        max-width: 520px;
+        text-align: left;
+    }
+
+    .profile-filter-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 0.75rem;
+        align-items: end;
+    }
+
+    .profile-filter-field { margin-bottom: 0; }
+
+    .profile-filter-submit {
+        width: auto;
+        padding: 0.65rem 1.25rem;
+        margin-top: 0;
+        align-self: end;
+    }
+
+    .profile-range-label {
+        font-size: 0.85rem;
+        color: var(--ink-muted);
+        margin: 0.75rem 0 0.5rem;
+        text-align: center;
+    }
+
+    /* --- Expense list --- */
+    .profile-expenses {
+        list-style: none;
+        margin: 1.25rem 0 0;
+        padding: 0;
+        text-align: left;
+    }
+
+    .profile-expense-row {
+        display: grid;
+        grid-template-columns: 110px 130px 110px 1fr;
+        gap: 1rem;
+        align-items: baseline;
+        padding: 0.75rem 0.25rem;
+        border-bottom: 1px solid var(--border-soft);
+    }
+
+    .profile-expense-row:last-child { border-bottom: none; }
+
+    .profile-expense-date {
+        font-variant-numeric: tabular-nums;
+        color: var(--ink-muted);
+        font-size: 0.9rem;
+    }
+
+    .profile-expense-category {
+        color: var(--ink-soft);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .profile-expense-amount {
+        font-variant-numeric: tabular-nums;
+        color: var(--ink);
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-align: right;
+    }
+
+    .profile-expense-description {
+        color: var(--ink-muted);
+        font-size: 0.9rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     @media (max-width: 600px) {
         .profile-field {
             grid-template-columns: 1fr;
             gap: 0.35rem;
         }
+
+        .profile-filter-fields { grid-template-columns: 1fr; }
+        .profile-filter-submit { width: 100%; }
+        .profile-expense-row {
+            grid-template-columns: 1fr 1fr;
+            row-gap: 0.25rem;
+        }
+        .profile-expense-description { grid-column: 1 / -1; }
     }
 </style>
 {% endblock %}
