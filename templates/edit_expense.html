@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Edit expense — Spendly{% endblock %}
+
+{% block content %}
+
+<section class="auth-section">
+    <div class="auth-container edit-expense-container">
+
+        <div class="auth-header">
+            <h1 class="auth-title">Edit expense</h1>
+            <p class="auth-subtitle">Update the details and save your changes</p>
+        </div>
+
+        <div class="auth-card edit-expense-card">
+            {% if error %}
+            <div class="auth-error">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('edit_expense', id=expense.id) }}" class="edit-expense-form">
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        value="{{ form.date }}"
+                        class="form-input"
+                        required
+                        autofocus
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" class="form-input" required>
+                        {% for c in categories %}
+                            <option value="{{ c }}" {% if form.category == c %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        id="amount"
+                        name="amount"
+                        value="{{ form.amount }}"
+                        class="form-input"
+                        placeholder="0.00"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description <span class="form-hint">(optional)</span></label>
+                    <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        value="{{ form.description or '' }}"
+                        class="form-input"
+                        maxlength="200"
+                        placeholder="What was this for?"
+                    >
+                </div>
+
+                <div class="edit-expense-actions">
+                    <button type="submit" class="btn-submit edit-expense-save">Save changes</button>
+                    <a href="{{ url_for('profile') }}" class="btn-ghost edit-expense-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <p class="auth-switch">
+            <a href="{{ url_for('profile') }}">← Back to profile</a>
+        </p>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<style>
+    .edit-expense-container { max-width: var(--auth-width); }
+
+    .edit-expense-card { padding: 2rem; }
+
+    .edit-expense-form { margin-top: 0.25rem; }
+
+    .form-hint {
+        color: var(--ink-faint);
+        font-weight: 400;
+        font-size: 0.85rem;
+    }
+
+    .edit-expense-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        margin-top: 0.5rem;
+    }
+
+    .edit-expense-save {
+        flex: 1;
+        width: auto;
+    }
+
+    .edit-expense-cancel {
+        flex: 0 0 auto;
+        text-align: center;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+        .edit-expense-actions { flex-direction: column-reverse; }
+        .edit-expense-save,
+        .edit-expense-cancel { width: 100%; }
+    }
+</style>
+{% endblock %}
