@@ -71,6 +71,7 @@
                             <span class="profile-expense-category">{{ expense.category }}</span>
                             <span class="profile-expense-amount">₹{{ '%.2f' | format(expense.amount) }}</span>
                             <span class="profile-expense-description">{{ expense.description or '' }}</span>
+                            <a class="profile-expense-edit" href="{{ url_for('edit_expense', id=expense.id) }}">Edit</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -84,7 +85,6 @@
             <a href="{{ url_for('add_expense') }}" class="btn-primary profile-next-cta">
                 Add your first expense
             </a>
-            <span class="profile-next-hint">Coming in Step 7</span>
         </div>
 
     </div>
@@ -138,7 +138,7 @@
     .profile-next {
         margin-top: 2rem;
         background: var(--paper-card);
-        border: 1px dashed var(--border);
+        border: 1px solid var(--border);
         border-radius: var(--radius-md);
         padding: 2.5rem 2rem;
         text-align: left;
@@ -216,7 +216,7 @@
 
     .profile-expense-row {
         display: grid;
-        grid-template-columns: 110px 130px 110px 1fr;
+        grid-template-columns: 110px 130px 110px 1fr auto;
         gap: 1rem;
         align-items: baseline;
         padding: 0.75rem 0.25rem;
@@ -253,6 +253,20 @@
         white-space: nowrap;
     }
 
+    .profile-expense-edit {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--accent);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+
+    .profile-expense-edit:hover {
+        color: var(--ink);
+        text-decoration: underline;
+    }
+
     @media (max-width: 600px) {
         .profile-field {
             grid-template-columns: 1fr;
@@ -266,6 +280,7 @@
             row-gap: 0.25rem;
         }
         .profile-expense-description { grid-column: 1 / -1; }
+        .profile-expense-edit { grid-column: 2; justify-self: end; }
     }
 </style>
 {% endblock %}
