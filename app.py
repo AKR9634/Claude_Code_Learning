@@ -308,9 +308,45 @@ def edit_expense(id):
     return redirect(url_for("profile", **request.args))
 
 
-@app.route("/expenses/<int:id>/delete")
+@app.route("/expenses/<int:id>/delete", methods=["GET", "POST"])
 def delete_expense(id):
-    return "Delete expense — coming in Step 9"
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT id, user_id, date, category, amount, description "
+            "FROM expenses WHERE id = ?",
+            (id,),
+        ).fetchone()
+
+        # 404 for both "not found" and "not yours" — do not leak which.
+        if row is None or row["user_id"] != session["user_id"]:
+            return abort(404)
+
+        start_date = request.args.get("start_date", "")
+        end_date = request.args.get("end_date", "")
+
+        if request.method == "GET":
+            return render_template(
+                "confirm_delete_expense.html",
+                expense=row,
+                start_date=start_date,
+                end_date=end_date,
+            )
+
+        # --- POST: delete the row, then redirect back to /profile ---
+        conn.execute(
+            "DELETE FROM expenses WHERE id = ? AND user_id = ?",
+            (id, session["user_id"]),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    # Preserve start_date / end_date from the original URL on the redirect.
+    return redirect(url_for("profile", **request.args))
 
 
 if __name__ == "__main__":
