@@ -1,4 +1,5 @@
 import math
+import os
 from datetime import date, datetime
 
 from flask import Flask, abort, render_template, request, redirect, url_for, session
@@ -7,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import CATEGORIES, get_db, init_db, seed_db
 
 app = Flask(__name__)
-app.secret_key = "dev-secret-change-me"  # TODO: move to env var before deploying
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 
 
 # ------------------------------------------------------------------ #
@@ -350,4 +351,7 @@ def delete_expense(id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    # Railway provides $PORT and expects the app to bind to 0.0.0.0.
+    # Locally we still default to 5001 so the dev workflow doesn't change.
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port, debug=False)
